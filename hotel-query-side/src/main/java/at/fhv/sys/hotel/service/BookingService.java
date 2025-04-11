@@ -1,24 +1,24 @@
 package at.fhv.sys.hotel.service;
 
 import at.fhv.sys.hotel.models.BookingQueryModel;
+import at.fhv.sys.hotel.repository.BookingRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.util.List;
 
 @ApplicationScoped
 public class BookingService {
 
-    @PersistenceContext
-    EntityManager entityManager;
+    @Inject
+    BookingRepository bookingRepository;
 
     public List<BookingQueryModel> getAllBookings() {
-        return entityManager.createQuery("SELECT b FROM BookingQueryModel b", BookingQueryModel.class).getResultList();
+        return bookingRepository.listAll();
     }
 
     @Transactional
     public void createBooking(BookingQueryModel booking) {
-        entityManager.persist(booking);
+        bookingRepository.persist(booking);
     }
 }
