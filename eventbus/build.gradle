@@ -20,6 +20,8 @@ dependencies {
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
     implementation project(':share-events')
+    implementation 'com.eventstore:db-client-java:5.3.0'
+
 }
 
 group 'at.fhv.sys'
@@ -41,3 +43,4 @@ compileJava {
 compileTestJava {
     options.encoding = 'UTF-8'
 }
+

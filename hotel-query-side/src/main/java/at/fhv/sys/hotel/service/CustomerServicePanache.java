@@ -17,4 +17,7 @@ public class CustomerServicePanache {
     public void createCustomer(CustomerQueryPanacheModel customer) {
         customer.persist();
     }
+
+
+
 }

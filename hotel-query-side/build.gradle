@@ -10,20 +10,21 @@ repositories {
 
 dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
-    implementation 'io.quarkus:quarkus-rest'
-    implementation 'io.quarkus:quarkus-rest-jackson'
-    implementation 'io.quarkus:quarkus-container-image-docker'
-    implementation 'io.quarkus:quarkus-smallrye-openapi'
-    implementation 'io.quarkus:quarkus-arc'
-    implementation 'io.quarkus:quarkus-jdbc-postgresql'
-    implementation 'io.quarkus:quarkus-hibernate-orm'
-    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+    implementation 'io.quarkus:quarkus-rest:3.15.0'
+    implementation 'io.quarkus:quarkus-rest-jackson:3.15.0'
+    implementation 'io.quarkus:quarkus-container-image-docker:3.9.2'
+    implementation 'io.quarkus:quarkus-smallrye-openapi:3.14.2'
+    implementation 'io.quarkus:quarkus-arc:3.9.2'
+    implementation 'io.quarkus:quarkus-jdbc-postgresql:3.9.2'
+    implementation 'io.quarkus:quarkus-hibernate-orm:3.15.0'  // Updated to 3.15.0 for consistency
+    implementation 'io.quarkus:quarkus-hibernate-orm-panache:3.15.0'  // Updated to 3.15.0
     implementation 'io.quarkiverse.logging.logback:quarkus-logging-logback:1.1.2'
-    testImplementation 'io.quarkus:quarkus-junit5'
-    testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'io.quarkus:quarkus-junit5:3.9.2'
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
     implementation project(':share-events')
-    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
-    implementation 'io.quarkus:quarkus-jdbc-h2'
+    implementation 'io.quarkus:quarkus-jdbc-h2:3.9.2'
+    implementation 'com.eventstore:db-client-java:5.3.0'
+
 }
 
 group 'at.fhv.sys'
