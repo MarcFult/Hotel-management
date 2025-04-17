@@ -2,8 +2,10 @@ package at.fhv.sys.hotel.startup;
 
 import at.fhv.sys.hotel.commands.shared.events.BookingCreated;
 import at.fhv.sys.hotel.commands.shared.events.CustomerCreated;
+import at.fhv.sys.hotel.commands.shared.events.RoomCreated;
 import at.fhv.sys.hotel.projection.BookingProjection;
 import at.fhv.sys.hotel.projection.CustomerProjection;
+import at.fhv.sys.hotel.projection.RoomProjection;
 import com.eventstore.dbclient.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -24,6 +26,10 @@ public class EventReplayService {
 
     @Inject
     BookingProjection bookingProjection;
+
+    @Inject
+    RoomProjection roomProjection;
+
 
     private final ObjectMapper objectMapper;
 
@@ -60,6 +66,10 @@ public class EventReplayService {
                 case "BookingCreated":
                     BookingCreated booking = objectMapper.readValue(eventData, BookingCreated.class);
                     bookingProjection.processBookingCreatedEvent(booking);
+                    break;
+                case "RoomCreated":
+                    RoomCreated room = objectMapper.readValue(eventData, RoomCreated.class);
+                    roomProjection.processRoomsCreatedEvent(room);
                     break;
                 default:
                     System.out.println("Unknown event type: " + eventType);

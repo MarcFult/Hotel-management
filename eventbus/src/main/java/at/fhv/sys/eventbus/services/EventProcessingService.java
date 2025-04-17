@@ -3,7 +3,10 @@ package at.fhv.sys.eventbus.services;
 import at.fhv.sys.eventbus.client.QueryClient;
 import at.fhv.sys.hotel.commands.shared.events.BookingCreated;
 import at.fhv.sys.hotel.commands.shared.events.CustomerCreated;
+import at.fhv.sys.hotel.commands.shared.events.RoomCreated;
 import com.eventstore.dbclient.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -51,6 +54,18 @@ public class EventProcessingService {
             // Forward to the query side
             queryClient.forwardBookingCreatedEvent(bookingCreated);
         }
+        else if (eventObject instanceof RoomCreated roomCreated) {
+            Logger.getAnonymousLogger().info("Storing and forwarding event: " + roomCreated);
+
+            String jsonData = serializeRoomEvent(roomCreated);
+            EventData event = EventData.builderAsJson(UUID.randomUUID(), "RoomCreated", jsonData.getBytes(StandardCharsets.UTF_8)).build();
+            appendToEventStore(stream, event);
+
+            queryClient.forwardRoomCreatedEvent(roomCreated);
+        }
+
+
+
     }
 
     private void appendToEventStore(String stream, EventData event) {
@@ -82,4 +97,17 @@ public class EventProcessingService {
             }
             """.formatted(event.getBookingId(), event.getRoomId(), event.getCustomerId(), event.getStartDate(), event.getEndDate());
     }
+
+    private String serializeRoomEvent(RoomCreated event) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(event);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to serialize RoomCreated event", e);
+        }
+    }
+
+
+
+
 }

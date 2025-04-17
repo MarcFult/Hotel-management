@@ -1,16 +1,18 @@
 package at.fhv.sys.hotel.models;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class RoomsQueryModel {
+public class RoomsQueryModel extends PanacheEntityBase {
 
     @Id
     private String roomId;
 
     private int roomNumber;
     private double price;
+
     private int capacity;
     private boolean hasTV;
     private boolean isSmokingAllowed;
