@@ -52,12 +52,12 @@ public class EventProcessingService {
     }
 
     private String serializeEvent(CustomerCreated event) {
-        // You can use Jackson or whatever you prefer
         return """
-                {
-                  "userId": "%s",
-                  "email": "%s"
-                }
-                """.formatted(event.getUserId(), event.getEmail());
+            {
+              "userId": "%s",
+              "email": "%s",
+              "name": "%s"
+            }
+            """.formatted(event.getUserId(), event.getEmail(), event.getName());
     }
 }

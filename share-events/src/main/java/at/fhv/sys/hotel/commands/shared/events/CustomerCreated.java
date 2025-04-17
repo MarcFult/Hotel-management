@@ -5,11 +5,14 @@ public class CustomerCreated {
     private String userId;
     private String email;
 
+    private String name;
+
     public CustomerCreated() {}
 
-    public CustomerCreated(String userId, String email) {
+    public CustomerCreated(String userId, String email, String name) {
         this.userId = userId;
         this.email = email;
+        this.name = name;
     }
 
     public String getUserId() {
@@ -28,8 +31,14 @@ public class CustomerCreated {
         this.email = email;
     }
 
+    public void setName(String name) {this.name = name;}
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
-        return "CustomerCreated{" + "userId='" + userId + '\'' + ", email='" + email + '\'' + '}';
+        return "CustomerCreated{" + "userId='" + userId + '\'' + ", email='" + email + '\'' + "userName='" + name +'}';
     }
 }

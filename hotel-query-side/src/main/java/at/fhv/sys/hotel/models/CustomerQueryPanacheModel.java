@@ -2,6 +2,7 @@ package at.fhv.sys.hotel.models;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
+import jakarta.transaction.Transactional;
 
 @Entity
 public class CustomerQueryPanacheModel extends PanacheEntity {
@@ -10,5 +11,17 @@ public class CustomerQueryPanacheModel extends PanacheEntity {
     public String userId;
     public String email;
 
+    public String name;
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+
+    @Transactional
+    public void createCustomer(CustomerQueryPanacheModel customer) {
+        customer.persist();
+    }
 
 }

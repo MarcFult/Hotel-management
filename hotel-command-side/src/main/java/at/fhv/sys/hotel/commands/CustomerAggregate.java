@@ -35,7 +35,7 @@ public class CustomerAggregate {
         customerRepository.persist(customer);
 
         // 2. Create and send event
-        CustomerCreated event = new CustomerCreated(command.userId(), command.email());
+        CustomerCreated event = new CustomerCreated(command.userId(), command.email(), command.name());
         Logger.getAnonymousLogger().info(eventClient.processCustomerCreatedEvent(event).toString());
 
         return command.userId();
