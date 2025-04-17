@@ -1,6 +1,7 @@
 package at.fhv.sys.eventbus.services;
 
 import at.fhv.sys.eventbus.client.QueryClient;
+import at.fhv.sys.hotel.commands.shared.events.BookingCreated;
 import at.fhv.sys.hotel.commands.shared.events.CustomerCreated;
 import com.eventstore.dbclient.*;
 import jakarta.annotation.PostConstruct;
@@ -32,22 +33,31 @@ public class EventProcessingService {
         if (eventObject instanceof CustomerCreated customerCreated) {
             Logger.getAnonymousLogger().info("Storing and forwarding event: " + customerCreated);
 
-            // 1. Serialize to JSON
+            // Serialize and append CustomerCreated to EventStoreDB
             String jsonData = serializeEvent(customerCreated);
+            EventData event = EventData.builderAsJson(UUID.randomUUID(), "CustomerCreated", jsonData.getBytes(StandardCharsets.UTF_8)).build();
+            appendToEventStore(stream, event);
 
-            // 2. Append to EventStore
-            EventData event = EventData
-                    .builderAsJson(UUID.randomUUID(), "CustomerCreated", jsonData.getBytes(StandardCharsets.UTF_8))
-                    .build();
-
-            try {
-                eventStore.appendToStream(stream, event).get(); // Blocking call
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException("Failed to append event to stream", e);
-            }
-
-            // 3. Forward to query side
+            // Forward to the query side
             queryClient.forwardCustomerCreatedEvent(customerCreated);
+        } else if (eventObject instanceof BookingCreated bookingCreated) {
+            Logger.getAnonymousLogger().info("Storing and forwarding event: " + bookingCreated);
+
+            // Serialize and append BookingCreated to EventStoreDB
+            String jsonData = serializeBookingEvent(bookingCreated);
+            EventData event = EventData.builderAsJson(UUID.randomUUID(), "BookingCreated", jsonData.getBytes(StandardCharsets.UTF_8)).build();
+            appendToEventStore(stream, event);
+
+            // Forward to the query side
+            queryClient.forwardBookingCreatedEvent(bookingCreated);
+        }
+    }
+
+    private void appendToEventStore(String stream, EventData event) {
+        try {
+            eventStore.appendToStream(stream, event).get(); // Blocking call
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to append event to stream", e);
         }
     }
 
@@ -59,5 +69,17 @@ public class EventProcessingService {
               "name": "%s"
             }
             """.formatted(event.getUserId(), event.getEmail(), event.getName());
+    }
+
+    private String serializeBookingEvent(BookingCreated event) {
+        return """
+            {
+              "bookingId": "%s",
+              "roomId": "%s",
+              "customerId": "%s",
+              "startDate": "%s",
+              "endDate": "%s"
+            }
+            """.formatted(event.getBookingId(), event.getRoomId(), event.getCustomerId(), event.getStartDate(), event.getEndDate());
     }
 }

@@ -5,19 +5,22 @@ import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 @QuarkusMain
 public class HotelQuerySideApplication {
+
+    @Inject
+    EventReplayService replayService;
+
     void onStart(@Observes StartupEvent ev) {
         Logger.getLogger(HotelQuerySideApplication.class).info("Starting Hotel Query Side Application");
-
-       EventReplayService foobar = new EventReplayService();
-       foobar.init();
-
+        replayService.init(); // use injected bean, not `new`
     }
 
     public static void main(String[] args) {
         Quarkus.run(args);
     }
 }
+

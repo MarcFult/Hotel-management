@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.logmanager.Logger;
 
 import java.util.List;
+import java.util.Optional;
 
 @Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
@@ -35,9 +36,16 @@ public class CustomerQueryController {
     }
 
     @GET
-    @Path("/customers")
+    @Path("/allCustomers")
     public List<CustomerQueryPanacheModel> getAllCustomers() {
         return customerServicePanache.getAllCustomers();
     }
+
+    @GET
+    @Path("/customers")
+    public List<CustomerQueryPanacheModel> getCustomers(@QueryParam("name") String name) {
+        return customerServicePanache.findCustomersByName(Optional.ofNullable(name));
+    }
+
 
 }
